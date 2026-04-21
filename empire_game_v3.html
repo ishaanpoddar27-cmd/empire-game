@@ -1,0 +1,1582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>The British Empire, Industrial Age</title>
+<style>
+
+/* ===================== RESET & BASE ===================== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: Georgia, serif;
+  background: #f0ebe0;
+  color: #222;
+  min-height: 100vh;
+}
+
+h1, h2, h3 { font-family: Georgia, serif; }
+
+button {
+  font-family: Georgia, serif;
+  cursor: pointer;
+}
+
+/* ===================== SCREENS ===================== */
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ===================== SHARED ===================== */
+.page-wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 16px 60px;
+}
+
+.top-bar {
+  background: #2c4a6e;
+  color: white;
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.top-bar h2 {
+  font-size: 1rem;
+  font-weight: normal;
+  letter-spacing: 0.05em;
+}
+
+.score-display {
+  font-size: 0.9rem;
+  background: rgba(255,255,255,0.15);
+  padding: 4px 12px;
+  border-radius: 3px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 10px 24px;
+  background: #2c4a6e;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  font-size: 1rem;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn:hover { background: #1e3550; }
+
+.btn-secondary {
+  background: transparent;
+  color: #2c4a6e;
+  border: 2px solid #2c4a6e;
+  padding: 8px 20px;
+  border-radius: 3px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.btn-secondary:hover { background: #e8f0f8; }
+
+hr {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin: 20px 0;
+}
+
+/* ===================== TITLE SCREEN ===================== */
+#title-screen {
+  background: #2c4a6e;
+  color: white;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+#title-screen h1 {
+  font-size: clamp(1.8rem, 5vw, 2.8rem);
+  margin-bottom: 8px;
+}
+
+#title-screen .subtitle {
+  font-style: italic;
+  font-size: 1.1rem;
+  opacity: 0.8;
+  margin-bottom: 30px;
+}
+
+.title-ship {
+  font-size: 3rem;
+  margin: 20px 0;
+}
+
+.intro-text {
+  max-width: 500px;
+  line-height: 1.8;
+  opacity: 0.9;
+  margin-bottom: 30px;
+  font-size: 1rem;
+}
+
+.title-btn {
+  background: white;
+  color: #2c4a6e;
+  border: none;
+  padding: 14px 40px;
+  font-size: 1.1rem;
+  font-family: Georgia, serif;
+  border-radius: 3px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.title-btn:hover { background: #e8f0f8; }
+
+/* ===================== METHODS SECTION ===================== */
+.section-intro {
+  background: #2c4a6e;
+  color: white;
+  padding: 20px;
+  margin-bottom: 24px;
+  border-radius: 4px;
+}
+
+.section-intro h2 {
+  font-size: 1.3rem;
+  margin-bottom: 6px;
+}
+
+.section-intro p {
+  opacity: 0.85;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.method-card {
+  background: white;
+  border: 1px solid #ddd;
+  border-left: 4px solid #2c4a6e;
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  border-radius: 0 4px 4px 0;
+}
+
+.method-card h3 {
+  font-size: 1.05rem;
+  color: #2c4a6e;
+  margin-bottom: 8px;
+}
+
+.method-card p {
+  line-height: 1.7;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.method-card .icon {
+  font-size: 1.4rem;
+  margin-right: 8px;
+}
+
+/* Methods quiz */
+.quiz-box {
+  background: white;
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 4px;
+  margin-top: 24px;
+}
+
+.quiz-box h3 {
+  font-size: 1rem;
+  color: #2c4a6e;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.8rem;
+}
+
+.quiz-progress {
+  font-size: 0.8rem;
+  color: #888;
+  margin-bottom: 14px;
+}
+
+.progress-bar {
+  height: 5px;
+  background: #e0e0e0;
+  border-radius: 3px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #2c4a6e;
+  border-radius: 3px;
+  transition: width 0.4s;
+}
+
+.question-text {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  margin-bottom: 16px;
+  color: #222;
+}
+
+.diff-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: 2px;
+  margin-bottom: 12px;
+  font-family: Arial, sans-serif;
+}
+
+.diff-1 { background: #d4edda; color: #155724; }
+.diff-2 { background: #cce5ff; color: #004085; }
+.diff-3 { background: #fff3cd; color: #856404; }
+.diff-4 { background: #f8d7da; color: #721c24; }
+.diff-5 { background: #e2d9f3; color: #4a235a; }
+
+.options-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.option-btn {
+  width: 100%;
+  text-align: left;
+  padding: 11px 14px;
+  background: #f8f8f8;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  font-size: 0.95rem;
+  font-family: Georgia, serif;
+  cursor: pointer;
+  line-height: 1.4;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.option-btn:hover:not(:disabled) {
+  background: #e8f0f8;
+  border-color: #2c4a6e;
+}
+
+.option-btn.correct {
+  background: #d4edda;
+  border-color: #28a745;
+  color: #155724;
+}
+
+.option-btn.wrong {
+  background: #f8d7da;
+  border-color: #dc3545;
+  color: #721c24;
+}
+
+.option-btn:disabled { cursor: default; }
+
+.retry-banner {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  padding: 10px 14px;
+  border-radius: 3px;
+  font-size: 0.9rem;
+  color: #856404;
+  margin-bottom: 12px;
+  display: none;
+}
+
+.feedback-box {
+  padding: 12px 14px;
+  border-radius: 3px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 14px;
+  display: none;
+}
+
+.feedback-box.correct {
+  background: #d4edda;
+  border: 1px solid #28a745;
+  color: #155724;
+  display: block;
+}
+
+.feedback-box.wrong {
+  background: #f8d7da;
+  border: 1px solid #dc3545;
+  color: #721c24;
+  display: block;
+}
+
+/* Info reveal box */
+.info-reveal-box {
+  margin-bottom: 20px;
+}
+
+.info-hint {
+  font-size: 0.85rem;
+  color: #888;
+  font-style: italic;
+  margin-bottom: 10px;
+}
+
+.info-section {
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.info-section-header {
+  padding: 10px 14px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.info-section-body {
+  padding: 12px 14px;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: #333;
+  background: white;
+  border-top: 1px solid #ddd;
+  display: none;
+}
+
+.info-section-body.visible { display: block; }
+
+.info-sec-history .info-section-header { background: #e8f4fd; color: #1a5276; }
+.info-sec-role    .info-section-header { background: #eafaf1; color: #1e8449; }
+.info-sec-reality .info-section-header { background: #fdf2f8; color: #7d3c98; }
+
+.locked-info {
+  font-size: 0.8rem;
+  color: #aaa;
+  padding: 6px 14px 10px;
+  font-style: italic;
+}
+
+/* ===================== WORLD MAP ===================== */
+#map-screen { background: #f0ebe0; }
+
+.map-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: #6aafe6;
+  border-bottom: 2px solid #2c4a6e;
+}
+
+#world-canvas {
+  display: block;
+  width: 100%;
+  cursor: pointer;
+}
+
+.map-legend {
+  padding: 10px 16px;
+  background: white;
+  border-bottom: 1px solid #ddd;
+  font-size: 0.8rem;
+  color: #555;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.legend-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legend-dot.formal   { background: #c0392b; }
+.legend-dot.informal { background: #e67e22; }
+.legend-dot.done     { background: #27ae60; }
+
+.map-instructions {
+  padding: 8px 16px;
+  background: #fff9e6;
+  border-bottom: 1px solid #f0d060;
+  font-size: 0.82rem;
+  color: #7a6000;
+  text-align: center;
+}
+
+.location-list-wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 16px 16px 60px;
+}
+
+.location-list-wrap h3 {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #888;
+  margin-bottom: 10px;
+}
+
+.loc-list-item {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.loc-list-item:hover { background: #f0f4f8; }
+.loc-list-item.done  { border-left: 4px solid #27ae60; }
+.loc-list-item.formal-col   { border-left: 4px solid #c0392b; }
+.loc-list-item.informal-col { border-left: 4px solid #e67e22; }
+
+.loc-list-left { display: flex; align-items: center; gap: 10px; }
+.loc-list-icon { font-size: 1.3rem; }
+
+.loc-list-name { font-size: 0.95rem; font-weight: bold; color: #222; }
+.loc-list-type { font-size: 0.75rem; color: #888; }
+
+.loc-list-right { font-size: 0.85rem; color: #888; }
+.loc-list-right.done-pts { color: #27ae60; font-weight: bold; }
+
+/* ===================== LOCATION SCREEN ===================== */
+.location-header {
+  background: white;
+  border-bottom: 1px solid #ddd;
+  padding: 16px 20px;
+}
+
+.location-header h2 { font-size: 1.2rem; color: #2c4a6e; }
+.location-header .loc-type { font-size: 0.8rem; color: #888; margin-top: 2px; }
+.location-header .loc-pts  { font-size: 0.85rem; color: #27ae60; margin-top: 4px; }
+
+/* ===================== END SCREEN ===================== */
+#end-screen {
+  min-height: 100vh;
+  background: #f0ebe0;
+}
+
+.end-wrap {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 30px 16px 60px;
+  text-align: center;
+}
+
+.verdict-text {
+  font-size: clamp(1.6rem, 5vw, 2.4rem);
+  font-weight: bold;
+  margin: 16px 0 8px;
+  line-height: 1.2;
+}
+
+.verdict-bad  { color: #c0392b; }
+.verdict-good { color: #2c4a6e; }
+.verdict-exc  { color: #27ae60; }
+
+.end-score {
+  font-size: 2rem;
+  color: #2c4a6e;
+  margin-bottom: 6px;
+}
+
+.end-grade {
+  font-size: 0.9rem;
+  color: #888;
+  margin-bottom: 24px;
+}
+
+.scorecard {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 20px 0;
+  text-align: left;
+}
+
+.sc-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid #eee;
+  font-size: 0.9rem;
+}
+
+.sc-row:last-child { border-bottom: none; }
+.sc-row.total-row { font-weight: bold; background: #f8f8f8; }
+.sc-pts { color: #2c4a6e; font-weight: bold; }
+.sc-pts.perfect { color: #27ae60; }
+
+.summary-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 20px 0;
+  text-align: left;
+}
+
+.summary-card {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 14px;
+}
+
+.summary-card h4 {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
+}
+
+.summary-card.dev h4  { color: #27ae60; }
+.summary-card.expl h4 { color: #c0392b; }
+
+.summary-card p {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: #444;
+}
+
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════ TITLE ═══════════════════════ -->
+<div id="title-screen" class="screen active">
+  <h1>The British Empire</h1>
+  <p class="subtitle">Industry, Colonies &amp; Control — 1783 to 1914</p>
+  <p class="intro-text">
+    Britain was the first industrial nation. To supply its factories with raw materials and sell its finished goods, it built and maintained a global empire. Explore the methods of colonial control, then visit each location to learn its history and test your knowledge :)
+  </p>
+  <button class="title-btn" onclick="showScreen('methods-screen')">Start </button>
+</div>
+
+<!-- ═══════════════════════ METHODS ═══════════════════════ -->
+<div id="methods-screen" class="screen">
+
+  <div class="top-bar">
+    <h2>Part 1  Methods of Colonisation</h2>
+    <span class="score-display" id="methods-score-display">0 pts</span>
+  </div>
+
+  <div class="page-wrap">
+
+    <div class="section-intro">
+      <h2>How Britain controlled the world</h2>
+      <p>Britain was a relatively small island ruling over hundreds of millions of people. It could not win by numbers alone, so it relied on technology, economic pressure, and political manipulation.</p>
+    </div>
+
+    <div class="method-card">
+      <h3>Naval Power and Gunboat Diplomacy</h3>
+      <p>Britain had the most powerful navy in the world. If a local government refused to trade or tried to raise taxes on British goods for example, Britain would position a heavily armed warship in their harbour. This was called "Gunboat Diplomacy": accept British terms, or face bombardment. It was used against China, Egypt, and many others.</p>
+    </div>
+
+    <div class="method-card">
+      <h3>The Telegraph</h3>
+      <p>Before the 1850s, a message from London to India, for example, took months. By the 1870s, undersea telegraph cables allowed orders to be sent in minutes. If a rebellion started anywhere in the Empire, London was informed basically immediately and could dispatch troops by steamship before the uprising could spread.</p>
+    </div>
+
+    <div class="method-card">
+      <h3>Divide and Rule</h3>
+      <p>Britain identified existing ethnic, religious, or social tensions within a territory and gave power, better jobs, or education to one specific group. This created rivalry between local groups and prevented them from uniting against British rule. This strategy was used extensively in India, Africa, and the Caribbean.</p>
+    </div>
+
+    <div class="method-card">
+      <h3>Debt and Infrastructure</h3>
+      <p>Britain funded the construction of railways, ports, and canals in places like Argentina, Egypt, and India, while using British loans and British engineers. The territory would accumulate large debts to British banks. To repay them, it had to continue exporting raw materials to Britain at low prices. The railways were built to move resources to ports, not to serve local populations.</p>
+    </div>
+
+    <div class="method-card">
+      <h3>Technological Superiority —> The Maxim Gun</h3>
+      <p>In the late 1800s, the Maxim Gun (the world's first portable automatic machine gun) allowed small British forces to defeat much larger local armies. A famous saying of the era: "Whatever happens, we have got the Maxim Gun, and they have not." This allowed Britain to hold colonies in Africa and Asia where it was heavily outnumbered.</p>
+    </div>
+
+    <div class="method-card">
+      <h3>The Four Mechanisms of Colonial Control</h3>
+      <p><strong>Extraction:</strong> Taking raw materials (cotton, wool, oil) from a territory at very low cost.<br>
+      <strong>Infrastructure:</strong> Building railways and telegraph lines to move resources to ports faster, not to develop local economies.<br>
+      <strong>Captive Markets:</strong> Forcing colonies to buy only British-made goods, preventing them from developing their own industries.<br>
+      <strong>Human Cost:</strong> Forced labour, displacement of Indigenous peoples, and destruction of local environments.</p>
+    </div>
+
+    <hr>
+
+    <!-- METHODS QUIZ -->
+    <div class="quiz-box" id="methods-quiz-box">
+      <h3>Test Your Knowledge</h3>
+      <div class="quiz-progress" id="methods-q-progress">Question 1 of 6</div>
+      <div class="progress-bar"><div class="progress-fill" id="methods-prog-fill" style="width:0%"></div></div>
+
+      <div class="diff-badge diff-1" id="methods-diff-badge">Beginner</div>
+      <p class="question-text" id="methods-q-text"></p>
+
+      <div class="retry-banner" id="methods-retry-banner">
+        Incorrect, you have one retry. Try again! You can do it! We believe in you!
+      </div>
+
+      <ul class="options-list" id="methods-options"></ul>
+
+      <div class="feedback-box" id="methods-feedback"></div>
+
+      <button class="btn" id="methods-next-btn" style="display:none" onclick="nextMethodsQuestion()">Next Question →</button>
+      <button class="btn" id="methods-finish-btn" style="display:none" onclick="showMapScreen()">Go to the World Map →</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════ MAP ═══════════════════════ -->
+<div id="map-screen" class="screen">
+
+  <div class="top-bar">
+    <h2>Part 2  The Map</h2>
+    <span class="score-display" id="map-score-display">0 pts</span>
+  </div>
+
+  <div class="map-instructions">
+    Click a location marker on the map (might not work unfortunatley) or tap a location in the list below
+  </div>
+
+  <div class="map-legend">
+    <strong>Legend:</strong>
+    <span class="legend-item"><span class="legend-dot formal"></span> Formal Colony</span>
+    <span class="legend-item"><span class="legend-dot informal"></span> Informal Empire</span>
+    <span class="legend-item"><span class="legend-dot done"></span> Completed</span>
+  </div>
+
+  <div class="map-container">
+    <canvas id="world-canvas"></canvas>
+  </div>
+
+  <div class="location-list-wrap">
+
+    <h3>Formal Empire (Direct Rule)</h3>
+    <div id="formal-list"></div>
+
+    <h3 style="margin-top:16px;">Informal Empire (Economic Control)</h3>
+    <div id="informal-list"></div>
+
+    <div id="map-end-wrap" style="display:none; text-align:center; margin-top:24px;">
+      <button class="btn" onclick="showEndScreen()">View Final Report →</button>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ═══════════════════════ LOCATION ═══════════════════════ -->
+<div id="location-screen" class="screen">
+
+  <div class="top-bar">
+    <button onclick="showMapScreen()" style="background:none;border:none;color:white;font-size:0.9rem;cursor:pointer;">← Map</button>
+    <span class="score-display" id="loc-score-display">0 pts</span>
+  </div>
+
+  <div class="location-header">
+    <h2 id="loc-title"></h2>
+    <div class="loc-type" id="loc-type"></div>
+    <div class="loc-pts" id="loc-pts"></div>
+  </div>
+
+  <div class="page-wrap">
+
+    <!-- Info reveal box -->
+    <div class="info-reveal-box" id="info-reveal-box">
+      <div class="info-hint" id="info-hint-text">Get a question wrong to reveal the historical briefing, one section at a time.</div>
+
+      <div class="info-section info-sec-history" id="info-sec-history">
+        <div class="info-section-header">Historical Context</div>
+        <div class="info-section-body" id="info-history-body"></div>
+        <div class="locked-info" id="info-history-locked">Unlock by getting a question wrong</div>
+      </div>
+
+      <div class="info-section info-sec-role" id="info-sec-role">
+        <div class="info-section-header">Industrial Role</div>
+        <div class="info-section-body" id="info-role-body"></div>
+        <div class="locked-info" id="info-role-locked">Unlock after 2nd wrong answer</div>
+      </div>
+
+      <div class="info-section info-sec-reality" id="info-sec-reality">
+        <div class="info-section-header">The Reality</div>
+        <div class="info-section-body" id="info-reality-body"></div>
+        <div class="locked-info" id="info-reality-locked">Unlock after 3rd wrong answer (you need this)</div>
+      </div>
+    </div>
+
+    <!-- Quiz -->
+    <div class="quiz-box" id="loc-quiz-box">
+      <h3>Questions</h3>
+      <div class="quiz-progress" id="loc-q-progress">Question 1 of 5</div>
+      <div class="progress-bar"><div class="progress-fill" id="loc-prog-fill" style="width:0%"></div></div>
+
+      <div class="diff-badge diff-1" id="loc-diff-badge">Beginner</div>
+      <p class="question-text" id="loc-q-text"></p>
+
+      <div class="retry-banner" id="loc-retry-banner">
+        Incorrect, you have one retry. Check the info above, then try again!
+      </div>
+
+      <ul class="options-list" id="loc-options"></ul>
+
+      <div class="feedback-box" id="loc-feedback"></div>
+
+      <button class="btn" id="loc-next-btn" style="display:none" onclick="nextLocQuestion()">Next Question →</button>
+      <button class="btn" id="loc-finish-btn" style="display:none" onclick="showMapScreen()">Back to Map →</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════ END SCREEN ═══════════════════════ -->
+<div id="end-screen" class="screen">
+  <div class="top-bar">
+    <h2>Final Report</h2>
+    <span class="score-display" id="end-score-display"></span>
+  </div>
+
+  <div class="end-wrap">
+    <div class="end-score" id="end-score-big"></div>
+    <div class="end-grade" id="end-grade"></div>
+    <div class="verdict-text" id="end-verdict"></div>
+
+    <div class="scorecard" id="scorecard"></div>
+
+    <div class="summary-cards">
+      <div class="summary-card dev">
+        <h4>Developments</h4>
+        <p>Steamships and telegraph cables connected the world. Britain built railways and ports across multiple continents. Industrial wealth funded medical and scientific research.</p>
+      </div>
+      <div class="summary-card expl">
+        <h4>Exploitation</h4>
+        <p>Local industries were deliberately broken to create captive markets. Forced labour and displacement of Indigenous peoples were widespread. Local environments were damaged to supply British factories.</p>
+      </div>
+    </div>
+
+    <button class="btn" onclick="restartGame()">Play Again (you know you want to)</button>
+  </div>
+</div>
+
+<script>
+
+// ═══════════════════════════════════════════════════════
+// DATA — METHODS QUESTIONS
+// ═══════════════════════════════════════════════════════
+const METHODS_QUESTIONS = [
+  {
+    diff: 1,
+    text: "What was 'Gunboat Diplomacy'?",
+    opts: [
+      "Sending trade ships loaded with a bunch of gifts to make allies",
+      "Using warships to threaten countries into trading with Britain",
+      "Building gunboats in colonial ports for local defence",
+      "A form of peaceful naval parade"
+    ],
+    ans: 1,
+    exp: "Gunboat Diplomacy meant parking a heavily armed warship in a harbour to force a government to accept British trade terms, cooperate or be shelled. It was used against China, Egypt, and many others."
+  },
+  {
+    diff: 1,
+    text: "What did the undersea telegraph cables allow Britain to do from the 1870s onwards?",
+    opts: [
+      "Send troops underwater to surprise enemies",
+      "Control colonial trade routes with electricity",
+      "Send orders to colonies in minutes rather than months",
+      "Monitor the movements of colonial ships"
+    ],
+    ans: 2,
+    exp: "Telegraph cables meant London could communicate with any part of the Empire almost instantly. A rebellion could be reported and troops dispatched before it spread, connecting the Empire."
+  },
+  {
+    diff: 2,
+    text: "What was the 'Divide and Rule' strategy?",
+    opts: [
+      "Splitting colonies into smaller, more manageable territories",
+      "Giving power to one local group to keep different groups fighting each other instead of uniting against Britain",
+      "Dividing tax collection between British and local officials",
+      "Splitting the British Army into small units across each colony"
+    ],
+    ans: 1,
+    exp: "Britain identified existing tensions between ethnic or religious groups, then favoured one. This kept local populations divided and unable to organise a unified resistance against British rule."
+  },
+  {
+    diff: 2,
+    text: "Why did Britain build railways in its colonies if it wasn't primarily to help locals travel?",
+    opts: [
+      "To connect colonial cities and modernise them",
+      "To pull raw materials from the interior to the coast for British ships",
+      "To allow colonial soldiers to defend borders faster",
+      "To create jobs for local workers"
+    ],
+    ans: 1,
+    exp: "Colonial railways were often reffered to as 'industrial veins', designed to drain resources from inland regions to coastal ports as efficiently as possible. They were built using British loans, which also created debt dependency."
+  },
+  {
+    diff: 3,
+    text: "What was the significance of the Maxim Gun in maintaining the British Empire?",
+    opts: [
+      "It allowed ships to fire further, dominating sea trade",
+      "It was a new type of steam engine that powered factories faster",
+      "As the first automatic machine gun, it let small British forces defeat much larger local armies",
+      "It was a type of cannon used to demolish city walls"
+    ],
+    ans: 2,
+    exp: "The Maxim Gun (invented 1884) was the world's first portable, fully automatic machine gun. A small British detachment could hold off hundreds of attackers. As the era's saying went: 'We have the Maxim Gun, and they have not.'"
+  },
+  {
+    diff: 3,
+    text: "What are 'Captive Markets' in the context of the British Empire?",
+    opts: [
+      "Markets in captured cities where goods were auctioned",
+      "Forcing colonies to only buy British-made goods, preventing them from developing their own industries",
+      "Open trading ports where all nations could buy and sell freely",
+      "Stock markets set up by British banks in colonial cities"
+    ],
+    ans: 1,
+    exp: "Captive markets meant colonies were legally or economically forced to buy from Britain only. This guaranteed profits for British factories while preventing colonies from industrialising and improving themselves."
+  }
+];
+
+// ═══════════════════════════════════════════════════════
+// DATA — LOCATIONS
+// ═══════════════════════════════════════════════════════
+// Map coordinates are in % of canvas width/height
+// Based on a simple equirectangular world map layout
+const LOCATIONS = [
+  // ── FORMAL EMPIRE ──
+  {
+    id: "india", name: "India", icon: "🧵", formal: true,
+    mapX: 0.665, mapY: 0.42,
+    type: "Formal Colony",
+    desc: "Raw cotton, indigo, and captive markets.",
+    history: "India was seized by the East India Company (EIC), a private company granted military powers by the British government. After the Indian Uprising of 1857, the British Crown took direct control. India was Britain's most valuable colonial possession.",
+    role: "India supplied raw cotton and indigo dye for British mills. Britain deliberately destroyed India's textile industry, flooding the market with cheap British cloth and imposing tariffs on Indian exports, so that Indians had no choice but to buy British goods.",
+    reality: "When Britain forced Indian farmers to grow cash crops (cotton, opium) instead of food, it contributed to large-scale famines in which tens of millions died. India's share of world manufacturing fell from roughly 25% in 1750 to under 2% by 1900.",
+    questions: [
+      { diff:1, text:"What company first took control of India before the British Crown?", opts:["The Hudson's Bay Company","The South Sea Company","The East India Company","The Royal Trading Company"], ans:2, exp:"The East India Company (EIC) built a private empire in India using its own army and courts. After the 1857 Uprising it was dissolved and the Crown took direct rule." },
+      { diff:2, text:"What was 'De-industrialisation' as applied to India?", opts:["Building new factories in Indian cities","Deliberately destroying Indian weaving industries so Indians had to buy British cloth","Removing Indian workers from British factories","Reducing the number of railways in India"], ans:1, exp:"Britain systematically destroyed India's famous textile industry, once among the finest in the world, to create a captive market for cheap British factory cloth." },
+      { diff:2, text:"What happened when Britain forced Indian farmers to grow 'cash crops' instead of food?", opts:["Indian farmers became wealthier","It led to massive, avoidable famines","Food production actually increased","India began exporting food globally"], ans:1, exp:"Cotton and opium were profitable for Britain but left farmers unable to grow food. Combined with British indifference and poor policy, this caused devastating famines in which tens of millions died." },
+      { diff:3, text:"What was India's approximate share of world manufacturing in 1750, before British rule?", opts:["Around 3%","Around 10%","Around 25%","Around 50%"], ans:2, exp:"India held roughly 24–25% of global manufacturing output in 1750 — comparable to all of Europe combined. By 1900, after a century of British rule, this had collapsed to under 2%." },
+      { diff:4, text:"What event in 1857 ended the East India Company's rule and transferred power to the British Crown?", opts:["The Bengal Mutiny","The Indian Uprising (also called the Indian Mutiny)","The Calcutta Revolt","The Delhi Rebellion"], ans:1, exp:"The Indian Uprising of 1857 began among Indian soldiers (sepoys) of the EIC's Bengal Army and spread widely. It was suppressed, but shocked Britain into dissolving the EIC and ruling India directly." }
+    ]
+  },
+  {
+    id: "settler", name: "Settler Colonies (Australia, New Zealand & Canada)", icon: "🐑", formal: true,
+    mapX: 0.52, mapY: 0.22,
+    type: "Formal Colony, Settler",
+    desc: "Wool, timber, wheat, and the displacement of Indigenous peoples.",
+    history: "Britain claimed Australia in 1788 as a penal colony, which grew into a large settler colony after the gold rushes of 1851. New Zealand was annexed in 1840 through the Treaty of Waitangi, a document the Maori signed believing they retained sovereignty, which Britain interpreted as full annexation. Canada was secured from France through the Treaty of Paris (1763). After American independence, around 40,000–60,000 Loyalists fled to Canada, reinforcing its British population.",
+    role: "Australia and New Zealand supplied wool to textile factories in Leeds and Bradford. Gold from Australian mines flowed into British banks. Canada supplied timber for British shipbuilding and wheat to feed Britain's growing urban population, who no longer produced their own food.",
+    reality: "In all three territories, Indigenous peoples, Aboriginal Australians, Maori, and First Nations, were removed from their land to make way for farms and mines, often by force. In Canada, the numbered treaties (1871–1921) confined First Nations to small reserves. In Australia, Britain claimed the land under 'Terra Nullius' — the legal fiction that it had no prior owners — despite Aboriginal Australians having lived there for over 65,000 years.",
+    questions: [
+      { diff:1, text:"What was Australia originally established as by Britain in 1788?", opts:["A gold mining colony","A sheep farming settlement","A penal colony for convicts","A military base against France"], ans:2, exp:"Britain established its first Australian colony at Sydney Cove as a penal colony, a place to send convicted criminals, partly because American independence had closed off that option." },
+      { diff:2, text:"What two resources did Canada primarily provide to Britain?", opts:["Gold and silver","Coal and iron","Timber and wheat","Cotton and rubber"], ans:2, exp:"Canada's forests supplied timber to build Britain's ships, while its prairies produced wheat that fed industrial city workers who no longer farmed their own land." },
+      { diff:2, text:"What legal claim did Britain use to justify seizing Aboriginal land in Australia?", opts:["Manifest Destiny","Terra Nullius, that the land had no prior owners","Royal Prerogative","The Charter of Discovery"], ans:1, exp:"Terra Nullius claimed Australia had no prior legal owners, despite Aboriginal Australians having lived there for over 65,000 years. This claim was only overturned in Australian law in 1992." },
+      { diff:3, text:"What did the Maori believe they were signing in the Treaty of Waitangi (1840)?", opts:["A full surrender of New Zealand to Britain","A trade agreement with no political implications","A document in which they kept sovereignty while allowing British settlement","A declaration of war against France"], ans:2, exp:"The Treaty exists in two versions with significantly different meanings. The Maori version indicated they kept sovereignty. Britain interpreted the English version as full annexation." },
+      { diff:4, text:"What mechanism was used from 1871 to confine First Nations peoples to reserves in Canada?", opts:["The British North America Act","The Indian Removal Act","The Numbered Treaties","The Reserve Proclamation"], ans:2, exp:"The numbered treaties (Treaty 1 through Treaty 11) exchanged vast territories for small reserves and annual payments. Many treaty provisions were subsequently broken by the Canadian government." }
+    ]
+  },
+  {
+    id: "caribbean", name: "The Caribbean & Strategic Ports", icon: "⚓", formal: true,
+    mapX: 0.28, mapY: 0.42,
+    type: "Formal Colony, Plantation Economy and Naval Bases",
+    desc: "Sugar, enslaved labour, and coaling stations.",
+    history: "British Caribbean colonies, Jamaica, Barbados, Trinidad and others, were built on sugar plantations using enslaved African labour. Britain abolished the slave trade in 1807 and slavery in 1833. Upon abolition, slave owners received £20 million in government compensation; the enslaved received nothing. Separately, Britain seized a global network of small ports and islands purely for their geographic position: Gibraltar (taken 1704) controlled the entrance to the Mediterranean; Singapore (founded 1819) sat beside the Strait of Malacca; Malta, Aden, and Hong Kong covered the remaining gaps.",
+    role: "Caribbean sugar provided cheap calories that sustained factory workers through long shifts, becoming a staple of the British working-class diet as prices fell. The strategic ports, Gibraltar, Singapore, Aden, Malta, Hong Kong, served as coaling and repair stations for steam-powered ships, which could not carry enough coal for a full oceanic voyage without stopping.",
+    reality: "After abolition, the indentured servitude system brought workers from India and China to the Caribbean under long contracts at very low wages. The £20 million compensation debt to slave owners was not fully repaid by British taxpayers until 2015. The strategic ports had no resources of their own, their entire value was geographic. Britain fought to keep them precisely because losing any one could cut key shipping routes.",
+    questions: [
+      { diff:1, text:"In what year did Britain abolish slavery throughout its Empire?", opts:["1807","1815","1833","1865"], ans:2, exp:"The Slavery Abolition Act 1833 ended slavery across most of the British Empire. The slave trade itself had been abolished in 1807, but slavery continued until 1833." },
+      { diff:1, text:"Why were coaling stations like Singapore and Gibraltar essential to the British Empire?", opts:["They were manufacturing centres","They grew tropical crops","Steam-powered ships needed coal refuelling stops or they could not complete oceanic voyages","They were Army training bases"], ans:2, exp:"Coal-powered ships could not carry enough fuel for a full oceanic voyage. Coaling stations at strategic intervals meant British ships could reach anywhere in the world." },
+      { diff:2, text:"Who received compensation when Britain abolished slavery in 1833?", opts:["The formerly enslaved people","Both slave owners and enslaved people equally","Slave owners only, the enslaved received nothing","The British government itself"], ans:2, exp:"The government paid £20 million to slave owners as compensation for their lost property. The enslaved received nothing. This debt was only fully repaid by British taxpayers in 2015." },
+      { diff:3, text:"What labour system replaced slavery in the Caribbean after 1838?", opts:["Sharecropping","Full wage labour","Indentured servitude, long contracts at very low wages","Feudal tenancy"], ans:2, exp:"Indentured servitude brought workers mostly from India and China to the Caribbean under multi-year contracts. Conditions were similar enough to slavery that many historians use that comparison." },
+      { diff:4, text:"Gibraltar controls the entrance to which body of water, and why did this matter to Britain?", opts:["The Red Sea, controlling access to the Suez Canal","The Mediterranean Sea, controlling access to southern Europe and the route to the canal","The Black Sea, blocking Russian naval expansion","The Indian Ocean, controlling trade with India directly"], ans:1, exp:"The Strait of Gibraltar is the only sea passage between the Atlantic and the Mediterranean. Whoever controls it controls access to southern Europe's coastline and the route toward the Suez Canal and India." }
+    ]
+  },
+  {
+    id: "africa", name: "Africa (South, West & East)", icon: "💎", formal: true,
+    mapX: 0.52, mapY: 0.62,
+    type: "Formal Colony, Mining and Resource Extraction",
+    desc: "Gold, diamonds, palm oil, rubber, and cocoa.",
+    history: "Britain took the Cape Colony in South Africa from the Dutch in 1806. After diamonds (1867) and gold (1886) were discovered there, it became Britain's most economically valuable colony. The Boer Wars (1880–81 and 1899–1902) were fought against Dutch-descended settlers for control of these resources. Separately, at the Berlin Conference (1884–85), European powers divided the rest of Africa among themselves without consulting any African leaders. Britain took Nigeria, Kenya, Ghana, and others, drawing borders as straight lines through existing ethnic groups and kingdoms.",
+    role: "South African gold backed the British Pound under the Gold Standard, making it the world's most trusted currency. West and East Africa supplied palm oil (used to lubricate factory machinery), rubber (for tyres and industrial hoses), and cocoa. Local labour, often coerced, extracted these materials.",
+    reality: "During the Boer War, Britain held Boer civilians in concentration camps where around 26,000 died. Black South Africans had their land seized and were excluded from political rights throughout the colonial period. The straight-line borders drawn at Berlin created artificial states that divided ethnic communities and placed rival groups together, borders that are largely unchanged today and remain a source of political instability.",
+    questions: [
+      { diff:1, text:"What two discoveries after 1867 made South Africa critically important to Britain?", opts:["Coal and iron","Oil and gas","Diamonds and gold","Copper and tin"], ans:2, exp:"Diamonds were discovered at Kimberley in 1867 and gold on the Witwatersrand in 1886. These discoveries made South Africa Britain's most economically valuable colony." },
+      { diff:2, text:"What was the Gold Standard, and why did South African gold matter?", opts:["A system of grading gold quality","The British Pound was backed by physical gold, making it the world's most trusted currency","A British law setting gold prices","A treaty ensuring gold was only mined by British companies"], ans:1, exp:"The Gold Standard tied the value of money to physical gold reserves. South African gold flowing into British banks made the Pound the world's reserve currency and London the centre of global finance." },
+      { diff:2, text:"What industrial raw material from West Africa was used to lubricate British factory machines?", opts:["Rubber","Palm oil","Cocoa butter","Coconut oil"], ans:1, exp:"Palm oil was a crucial industrial lubricant before synthetic alternatives existed. West Africa, particularly Nigeria and Ghana, was the main source." },
+      { diff:3, text:"What was decided at the Berlin Conference of 1884–85?", opts:["African leaders agreed to trade terms with Europe","European powers divided Africa among themselves, without consulting any Africans","Britain and Germany agreed to share West Africa","The abolition of the slave trade in Africa"], ans:1, exp:"European diplomats drew Africa's colonial borders on maps using rulers, creating straight lines that cut through ethnic groups and kingdoms. No African representatives were present." },
+      { diff:4, text:"What controversial tactic did Britain use against Boer civilians during the Boer War (1899–1902)?", opts:["Biological warfare","Naval blockades","Concentration camps, where around 26,000 civilians died","Forced deportation to India"], ans:2, exp:"Britain placed Boer women and children in concentration camps. Around 26,000 Boers died there from disease and poor conditions, along with a larger and less-recorded number of Black South Africans." }
+    ]
+  },
+
+  // ── INFORMAL EMPIRE ──
+  {
+    id: "china", name: "China", icon: "⚔️", formal: false,
+    mapX: 0.78, mapY: 0.35,
+    type: "Informal Empire, Forced Trade",
+    desc: "Opium smuggling and forced market access.",
+    history: "Britain imported Chinese tea, silk, and porcelain but China refused British manufactured goods, creating a trade deficit. Britain's response was to smuggle opium, grown on British-controlled plantations in India, into China illegally. When China destroyed the opium stockpiles, Britain launched the First Opium War (1839–42). China lost, ceded Hong Kong, and was forced to open its ports to British trade.",
+    role: "China's population of 400 million was the largest potential market in the world. Britain used military force to open it. After the Opium Wars, British subjects in China could only be tried under British law, not Chinese law, a condition China had no power to refuse.",
+    reality: "An estimated 10–12 million Chinese people were addicted to opium by the 1880s. The series of military defeats and unequal treaties imposed on China between 1839 and 1949 is referred to in China as the Century of Humiliation, and continues to shape Chinese foreign policy.",
+    questions: [
+      { diff:1, text:"What did Britain smuggle into China to solve its trade deficit?", opts:["Tobacco","Opium","Alcohol","Cotton textiles"], ans:1, exp:"Britain grew opium in India and smuggled it into China to create demand. This addicted millions of Chinese people and gave Britain a product China would pay for, solving the trade deficit at an enormous human cost." },
+      { diff:2, text:"What did Britain gain from China after winning the First Opium War (1839–42)?", opts:["The right to build railways in China","Hong Kong Island and trading rights at five ports","Access to Chinese coal deposits","The right to rule Shanghai directly"], ans:1, exp:"The Treaty of Nanking (1842) ceded Hong Kong Island to Britain, opened five 'treaty ports' to British trade, and required China to pay a large financial indemnity. It was the first of many 'unequal treaties'." },
+      { diff:2, text:"What term describes China's period of foreign exploitation and humiliation from 1839 to 1949?", opts:["The Age of Subjugation","The Century of Humiliation","The Imperial Wound","The Era of Unequal Treaties"], ans:1, exp:"The 'Century of Humiliation' (百年屈辱) remains central to Chinese national identity. It covers the Opium Wars, foreign spheres of influence, the Japanese invasion, and other humiliations, and still informs China's foreign policy." },
+      { diff:3, text:"Approximately how many Chinese people were estimated to be addicted to opium by the 1880s?", opts:["Around 500,000","Around 2 million","Around 10–12 million","Around 50 million"], ans:2, exp:"Historical estimates suggest 10–12 million Chinese people were addicted by the 1880s, roughly 2–3% of the population. The social devastation was immense, and China's repeated attempts to stop the trade were what Britain used as pretexts for the Opium Wars." },
+      { diff:4, text:"What were 'extraterritoriality' rights, imposed on China after the Opium Wars?", opts:["The right for Britain to extract resources from Chinese territory without tax","The right to build railways across China","The right for British subjects in China to be tried under British law rather than Chinese law","The right for British ships to sail on Chinese rivers"], ans:2, exp:"Extraterritoriality meant British citizens in China were immune from Chinese law, they could only be tried in British courts. This was deeply humiliating to China and a clear sign that Britain viewed China as less than a sovereign equal. Similar rights were forced on Japan, Persia, and others." }
+    ]
+  },
+  {
+    id: "egypt", name: "Egypt", icon: "🚢", formal: false,
+    mapX: 0.575, mapY: 0.38,
+    type: "Informal Empire, Strategic Occupation",
+    desc: "Control of the Suez Canal without formal colonisation.",
+    history: "Egypt was technically part of the Ottoman Empire. The Suez Canal was built by a Franco-Egyptian company and opened in 1869. In 1875, Prime Minister Disraeli borrowed £4 million from the Rothschild bank, without parliamentary approval, to purchase Egypt's shares in the canal. When Egyptian nationalist unrest threatened the canal in 1882, Britain invaded and occupied Egypt.",
+    role: "The Suez Canal reduced the sea journey from Britain to India by approximately 4,000 miles and several weeks. This significantly reduced the cost of transporting goods, troops, and mail across the Empire.",
+    reality: "Egypt was never formally declared a British colony, but Britain controlled its government, finances, and military for over 70 years. Egypt gained nominal independence in 1922, but British troops remained until 1956.",
+    questions: [
+      { diff:1, text:"In what year was the Suez Canal opened?", opts:["1848","1856","1869","1882"], ans:2, exp:"The Suez Canal opened on 17 November 1869. Built by the Suez Canal Company (a Franco-Egyptian enterprise), it immediately transformed global shipping by cutting thousands of miles off the route from Europe to Asia." },
+      { diff:2, text:"How did PM Disraeli acquire a controlling stake in the Suez Canal for Britain in 1875?", opts:["Through a military takeover","He borrowed £4 million from the Rothschild bank without waiting for parliamentary approval to buy Egypt's shares","Through a parliamentary vote","Britain built a second canal in exchange for shares"], ans:1, exp:"Disraeli learned the Egyptian Khedive urgently needed money. Without waiting for parliament, he borrowed £4 million from the Rothschild banking family overnight and purchased Egypt's 44% stake in the canal, giving Britain a controlling interest." },
+      { diff:2, text:"By approximately how many miles did the Suez Canal shorten the journey from Britain to India?", opts:["500 miles","1,500 miles","4,000 miles","8,000 miles"], ans:2, exp:"The Canal reduced the London-to-Bombay route from roughly 10,800 miles (around the Cape of Good Hope) to roughly 6,200 miles, saving around 4,000 miles and several weeks of sailing time." },
+      { diff:3, text:"Why did Britain invade and occupy Egypt in 1882 despite it not being a formal British colony?", opts:["To seize Egyptian cotton fields","To block French expansion into North Africa","Egyptian nationalist unrest threatened British control of the Suez Canal","To punish Egypt for defaulting on its debts to Britain"], ans:2, exp:"Ahmed Urabi's nationalist revolt threatened the canal and Egypt's European-controlled finances. Britain used this as justification to bombard Alexandria and invade, beginning an occupation that lasted until 1956." },
+      { diff:4, text:"Why did Britain consider control of the Suez Canal important enough to occupy a country it did not formally own?", opts:["Egypt controlled access to African gold mines","Losing the canal would force ships back to the much longer route around the Cape of Good Hope, making the Empire far more expensive to maintain","Egypt was needed as a military base against Russia","Britain needed Egyptian cotton for its textile mills"], ans:1, exp:"The canal was the fastest route between Britain and India. If Britain lost control of it, every ship would have to travel around Africa instead, adding thousands of miles and weeks to each journey. This is why Britain occupied Egypt despite never formally colonising it." }
+    ]
+  },
+  {
+    id: "argentina", name: "Argentina & Latin America", icon: "🥩", formal: false,
+    mapX: 0.295, mapY: 0.70,
+    type: "Informal Empire, Economic Control",
+    desc: "Independent states controlled through debt, railways, and trade.",
+    history: "Argentina, Brazil, and Chile were independent nations, but Britain dominated their economies. British banks financed Argentina's entire railway network. British companies owned Chilean nitrate and copper mines and Brazilian rubber plantations. These governments accumulated large debts to British banks and faced British diplomatic pressure if they tried to interfere with British-owned assets.",
+    role: "Argentina exported beef to Britain via refrigerated steamships from the 1870s. Chile supplied nitrates (used as fertiliser and in explosives) and copper for electrical wiring. Brazil supplied rubber for industrial machinery. The railways built by British capital moved these materials to ports for export, they were not designed to connect local cities.",
+    reality: "The profits from mining, farming, and railways left these countries and went to British shareholders. When local governments tried to tax British companies or improve workers' conditions, they faced British economic pressure or political interference. This kept these countries as raw material exporters and prevented them from industrialising.",
+    questions: [
+      { diff:1, text:"Why is Argentina described as part of Britain's informal empire despite being an independent country?", opts:["Britain secretly governed it from London","Britain controlled its economy through banks, railways, and trade without formally colonising it","Britain occupied it militarily","Argentina was officially a British protectorate"], ans:1, exp:"Argentina was legally independent from 1816, but British banks owned its debt, British companies built its railways, and British trade dominated its economy, giving Britain effective economic control without formal rule." },
+      { diff:2, text:"What technology introduced from the 1870s allowed Argentine beef to be sold in Britain?", opts:["Canning factories","Refrigerated steamships","Salting and barrel preservation","Air freight"], ans:1, exp:"Refrigerated steamships allowed chilled beef to travel from Argentina to Britain without spoiling. The first successful shipment arrived in 1880. This made Argentine beef affordable for the British working class." },
+      { diff:2, text:"What mineral from Chilean mines was used both as agricultural fertiliser and in explosives?", opts:["Copper","Iron","Nitrates","Zinc"], ans:2, exp:"Chilean nitrate (saltpetre) was essential both as a fertiliser for feeding growing industrial populations and as a key ingredient in gunpowder. British companies dominated this industry in the mid-1800s." },
+      { diff:3, text:"Why were the railways Britain built in Argentina not primarily designed to benefit Argentine citizens?", opts:["They were built too slowly to be useful","They connected interior regions to coastal ports for export, not Argentine cities to each other","They were only used by British settlers","They were too expensive for local people to use"], ans:1, exp:"The railways were built to move beef, grain, and raw materials from the interior to coastal ports for export to Britain. Connecting Argentine cities for the benefit of Argentine people was not the objective." },
+      { diff:4, text:"What happened when Latin American governments tried to tax British-owned companies or take control of British assets?", opts:["Britain declared war","British banks restricted credit or backed political opposition to pressure governments into backing down","Britain imposed trade embargoes","British settlers organised local resistance"], ans:1, exp:"British banks could restrict loans, demand early repayment of debts, or fund political opponents — forcing governments to reverse decisions that threatened British interests, without needing to use military force." }
+    ]
+  }
+];
+
+// ═══════════════════════════════════════════════════════
+// GAME STATE
+// ═══════════════════════════════════════════════════════
+let state = {
+  totalScore:     0,
+  methodsScore:   0,
+  methodsQIdx:    0,
+  methodsRetry:   false,
+  locScores:      {},  // id -> pts
+  locCompleted:   {},  // id -> bool
+  locWrongCount:  {},  // id -> number
+  locQIdx:        {},  // id -> current question index
+  locRetry:       {},  // id -> bool
+  currentLocId:   null
+};
+
+const DIFF_NAMES = ['','Beginner','Easy','Intermediate','Hard','Expert'];
+
+// showScreen defined once below in INIT section
+
+// ═══════════════════════════════════════════════════════
+// METHODS QUIZ
+// ═══════════════════════════════════════════════════════
+function initMethodsQuiz() {
+  state.methodsQIdx  = 0;
+  state.methodsRetry = false;
+  renderMethodsQuestion();
+}
+
+function renderMethodsQuestion() {
+  const qi = state.methodsQIdx;
+  if (qi >= METHODS_QUESTIONS.length) {
+    document.getElementById('methods-next-btn').style.display   = 'none';
+    document.getElementById('methods-finish-btn').style.display = 'inline-block';
+    document.getElementById('methods-q-progress').textContent   = 'All done!';
+    document.getElementById('methods-prog-fill').style.width    = '100%';
+    document.getElementById('methods-q-text').textContent       = `Methods section complete. You scored ${state.methodsScore} / ${METHODS_QUESTIONS.length * 20} points. Now explore the world map!`;
+    document.getElementById('methods-options').innerHTML = '';
+    document.getElementById('methods-diff-badge').textContent = '';
+    document.getElementById('methods-feedback').className = 'feedback-box';
+    return;
+  }
+
+  const q = METHODS_QUESTIONS[qi];
+  document.getElementById('methods-q-progress').textContent = `Question ${qi+1} of ${METHODS_QUESTIONS.length}`;
+  document.getElementById('methods-prog-fill').style.width  = `${(qi / METHODS_QUESTIONS.length) * 100}%`;
+  document.getElementById('methods-diff-badge').textContent = DIFF_NAMES[q.diff];
+  document.getElementById('methods-diff-badge').className   = `diff-badge diff-${q.diff}`;
+  document.getElementById('methods-q-text').textContent     = q.text;
+  document.getElementById('methods-feedback').className     = 'feedback-box';
+  document.getElementById('methods-retry-banner').style.display = 'none';
+  document.getElementById('methods-next-btn').style.display     = 'none';
+  document.getElementById('methods-finish-btn').style.display   = 'none';
+
+  const optList = document.getElementById('methods-options');
+  optList.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  q.opts.forEach((opt, i) => {
+    const li  = document.createElement('li');
+    const btn = document.createElement('button');
+    btn.className   = 'option-btn';
+    btn.textContent = `${letters[i]}. ${opt}`;
+    btn.onclick     = () => handleMethodsAnswer(i);
+    li.appendChild(btn);
+    optList.appendChild(li);
+  });
+}
+
+function handleMethodsAnswer(chosen) {
+  const qi = state.methodsQIdx;
+  const q  = METHODS_QUESTIONS[qi];
+  const correct = chosen === q.ans;
+  const fb = document.getElementById('methods-feedback');
+
+  if (correct) {
+    state.methodsRetry = false;
+    document.getElementById('methods-retry-banner').style.display = 'none';
+    markOptions('methods-options', chosen, q.ans, true);
+    fb.className = 'feedback-box correct';
+    fb.textContent = '✓ Correct! ' + q.exp;
+    state.methodsScore += 20;
+    state.totalScore   += 20;
+    updateScoreDisplays();
+    state.methodsQIdx++;
+    document.getElementById('methods-next-btn').style.display = 'inline-block';
+  } else if (!state.methodsRetry) {
+    state.methodsRetry = true;
+    markOneWrong('methods-options', chosen);
+    document.getElementById('methods-retry-banner').style.display = 'block';
+  } else {
+    state.methodsRetry = false;
+    document.getElementById('methods-retry-banner').style.display = 'none';
+    markOptions('methods-options', chosen, q.ans, false);
+    fb.className = 'feedback-box wrong';
+    fb.textContent = `✗ Incorrect. The correct answer was ${['A','B','C','D'][q.ans]}. ${q.exp}`;
+    state.methodsQIdx++;
+    document.getElementById('methods-next-btn').style.display = 'inline-block';
+  }
+}
+
+function nextMethodsQuestion() {
+  renderMethodsQuestion();
+}
+
+// ═══════════════════════════════════════════════════════
+// OPTION MARKING HELPERS
+// ═══════════════════════════════════════════════════════
+function markOptions(listId, chosen, correct, wasCorrect) {
+  const btns = document.querySelectorAll(`#${listId} .option-btn`);
+  btns.forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === correct) btn.classList.add('correct');
+    if (i === chosen && !wasCorrect) btn.classList.add('wrong');
+  });
+}
+
+function markOneWrong(listId, chosen) {
+  const btns = document.querySelectorAll(`#${listId} .option-btn`);
+  btns[chosen].disabled = true;
+  btns[chosen].classList.add('wrong');
+}
+
+// ═══════════════════════════════════════════════════════
+// SCORE DISPLAY
+// ═══════════════════════════════════════════════════════
+function updateScoreDisplays() {
+  const t = state.totalScore;
+  document.getElementById('methods-score-display').textContent = `${t} pts`;
+  document.getElementById('map-score-display').textContent     = `${t} pts`;
+  document.getElementById('loc-score-display').textContent     = `${t} pts`;
+}
+
+// ═══════════════════════════════════════════════════════
+// MAP SCREEN
+// ═══════════════════════════════════════════════════════
+function showMapScreen() {
+  updateScoreDisplays();
+  renderLocationLists();
+  showScreen('map-screen');
+  // Small delay to ensure canvas is visible before drawing
+  setTimeout(drawMap, 50);
+
+  // Check if all done
+  const allDone = LOCATIONS.every(l => state.locCompleted[l.id]);
+  document.getElementById('map-end-wrap').style.display = allDone ? 'block' : 'none';
+}
+
+function renderLocationLists() {
+  const formalEl   = document.getElementById('formal-list');
+  const informalEl = document.getElementById('informal-list');
+  formalEl.innerHTML   = '';
+  informalEl.innerHTML = '';
+
+  LOCATIONS.forEach(loc => {
+    const done = !!state.locCompleted[loc.id];
+    const pts  = state.locScores[loc.id] || 0;
+
+    const item = document.createElement('div');
+    item.className = `loc-list-item ${done ? 'done' : loc.formal ? 'formal-col' : 'informal-col'}`;
+    item.onclick   = () => openLocation(loc.id);
+
+    const right = done
+      ? `<span class="loc-list-right done-pts">${pts}/100</span>`
+      : `<span class="loc-list-right">→</span>`;
+
+    item.innerHTML = `
+      <div class="loc-list-left">
+        <div>
+          <div class="loc-list-name">${loc.name}</div>
+          <div class="loc-list-type">${loc.type.split('—')[0].trim()}</div>
+        </div>
+      </div>
+      ${right}
+    `;
+    (loc.formal ? formalEl : informalEl).appendChild(item);
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+// CANVAS MAP
+// ═══════════════════════════════════════════════════════
+const MAP_ASPECT = 0.5; // height / width ratio
+
+function drawMap() {
+  const canvas = document.getElementById('world-canvas');
+  const container = canvas.parentElement;
+  const W = container.clientWidth;
+  const H = W * MAP_ASPECT;
+  canvas.width  = W;
+  canvas.height = H;
+  canvas.style.height = H + 'px';
+
+  const ctx = canvas.getContext('2d');
+
+  // Ocean background
+  ctx.fillStyle = '#6aafe6';
+  ctx.fillRect(0, 0, W, H);
+
+  // Draw simplified land masses
+  drawLandmasses(ctx, W, H);
+
+  // Draw location markers
+  LOCATIONS.forEach(loc => {
+    const x = loc.mapX * W;
+    const y = loc.mapY * H;
+    const done = !!state.locCompleted[loc.id];
+
+    // Shadow
+    ctx.beginPath();
+    ctx.arc(x, y, 11, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(0,0,0,0.25)';
+    ctx.fill();
+
+    // Circle
+    ctx.beginPath();
+    ctx.arc(x, y, 10, 0, Math.PI * 2);
+    ctx.fillStyle = done ? '#27ae60' : (loc.formal ? '#c0392b' : '#e67e22');
+    ctx.fill();
+    ctx.strokeStyle = 'white';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Icon (emoji as text)
+    ctx.font = '11px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = 'white';
+    ctx.fillText(done ? '✓' : loc.icon, x, y);
+
+    // Label
+    ctx.font = 'bold 9px Arial';
+    ctx.fillStyle = '#111';
+    ctx.textBaseline = 'top';
+
+    // Choose label position to avoid map edges
+    const label = loc.name.length > 14 ? loc.name.split(' ')[0] : loc.name;
+    const lx = x;
+    let ly = y + 13;
+    if (ly + 12 > H) ly = y - 24;
+
+    // Small white background for readability
+    const tw = ctx.measureText(label).width;
+    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    ctx.fillRect(lx - tw/2 - 2, ly - 1, tw + 4, 12);
+    ctx.fillStyle = '#222';
+    ctx.fillText(label, lx, ly);
+  });
+}
+
+function drawLandmasses(ctx, W, H) {
+  ctx.fillStyle = '#c8b878';
+  ctx.strokeStyle = '#a09050';
+  ctx.lineWidth = 1;
+
+  function poly(pts) {
+    ctx.beginPath();
+    pts.forEach(([px, py], i) => {
+      const x = px * W, y = py * H;
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    });
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+  }
+
+  // North America
+  poly([[0.05,0.08],[0.32,0.06],[0.35,0.12],[0.30,0.18],[0.32,0.28],[0.28,0.38],[0.22,0.44],[0.18,0.40],[0.15,0.32],[0.10,0.28],[0.05,0.22],[0.03,0.14]]);
+  // South America
+  poly([[0.22,0.44],[0.30,0.42],[0.36,0.48],[0.38,0.60],[0.34,0.76],[0.28,0.82],[0.22,0.78],[0.18,0.66],[0.20,0.54]]);
+  // Europe
+  poly([[0.46,0.08],[0.56,0.07],[0.58,0.14],[0.54,0.20],[0.50,0.22],[0.46,0.18],[0.44,0.12]]);
+  // Africa
+  poly([[0.48,0.24],[0.58,0.22],[0.64,0.28],[0.64,0.40],[0.62,0.52],[0.60,0.64],[0.56,0.72],[0.52,0.74],[0.48,0.68],[0.44,0.56],[0.44,0.44],[0.46,0.32]]);
+  // Middle East / Arabia
+  poly([[0.56,0.22],[0.66,0.24],[0.68,0.34],[0.62,0.38],[0.58,0.34],[0.56,0.28]]);
+  // Russia / North Asia
+  poly([[0.54,0.06],[0.78,0.04],[0.90,0.06],[0.92,0.14],[0.88,0.18],[0.80,0.16],[0.72,0.18],[0.64,0.16],[0.58,0.12],[0.54,0.10]]);
+  // India subcontinent
+  poly([[0.62,0.30],[0.70,0.28],[0.72,0.36],[0.70,0.46],[0.66,0.50],[0.62,0.44],[0.60,0.36]]);
+  // Southeast Asia
+  poly([[0.74,0.34],[0.84,0.32],[0.86,0.40],[0.82,0.44],[0.76,0.42],[0.72,0.38]]);
+  // China / East Asia
+  poly([[0.72,0.18],[0.86,0.16],[0.90,0.22],[0.88,0.32],[0.82,0.34],[0.74,0.32],[0.70,0.28],[0.70,0.22]]);
+  // Australia
+  poly([[0.78,0.56],[0.90,0.54],[0.94,0.60],[0.92,0.72],[0.86,0.76],[0.78,0.74],[0.74,0.68],[0.74,0.60]]);
+  // Greenland
+  poly([[0.20,0.04],[0.30,0.02],[0.34,0.06],[0.32,0.12],[0.26,0.14],[0.20,0.10]]);
+  // Japan
+  poly([[0.88,0.24],[0.92,0.22],[0.93,0.28],[0.89,0.30],[0.87,0.27]]);
+
+  // Britain (small but visible)
+  ctx.fillStyle = '#d4a030';
+  poly([[0.465,0.12],[0.475,0.11],[0.480,0.14],[0.472,0.16],[0.464,0.15]]);
+}
+
+// Handle canvas clicks
+document.getElementById('world-canvas').addEventListener('click', function(e) {
+  const canvas  = this;
+  const rect    = canvas.getBoundingClientRect();
+  const scaleX  = canvas.width  / rect.width;
+  const scaleY  = canvas.height / rect.height;
+  const mx      = (e.clientX - rect.left) * scaleX;
+  const my      = (e.clientY - rect.top)  * scaleY;
+
+  const W = canvas.width, H = canvas.height;
+  let closest = null, minDist = 999;
+
+  LOCATIONS.forEach(loc => {
+    const lx = loc.mapX * W;
+    const ly = loc.mapY * H;
+    const d  = Math.hypot(mx - lx, my - ly);
+    if (d < minDist) { minDist = d; closest = loc; }
+  });
+
+  if (closest && minDist < 30 * (W / 600)) {
+    openLocation(closest.id);
+  }
+});
+
+// ═══════════════════════════════════════════════════════
+// LOCATION SCREEN
+// ═══════════════════════════════════════════════════════
+function openLocation(id) {
+  const loc = LOCATIONS.find(l => l.id === id);
+  state.currentLocId = id;
+
+  if (!state.locScores[id])     state.locScores[id]     = 0;
+  if (!state.locWrongCount[id]) state.locWrongCount[id] = 0;
+  if (!state.locQIdx[id])       state.locQIdx[id]       = 0;
+  if (state.locRetry[id] === undefined) state.locRetry[id] = false;
+
+  document.getElementById('loc-title').textContent = loc.name;
+  document.getElementById('loc-type').textContent  = loc.type;
+
+  document.getElementById('info-history-body').textContent = loc.history;
+  document.getElementById('info-role-body').textContent    = loc.role;
+  document.getElementById('info-reality-body').textContent = loc.reality;
+
+  applyInfoReveal(id);
+  renderLocQuestion(id);
+  updateScoreDisplays();
+  showScreen('location-screen');
+}
+
+function applyInfoReveal(id) {
+  const wc   = state.locWrongCount[id] || 0;
+  const done = !!state.locCompleted[id];
+
+  const showHistory = done || wc >= 1;
+  const showRole    = done || wc >= 2;
+  const showReality = done || wc >= 3;
+
+  // History
+  document.getElementById('info-history-body').classList.toggle('visible', showHistory);
+  document.getElementById('info-history-locked').style.display = showHistory ? 'none' : 'block';
+
+  // Role
+  document.getElementById('info-role-body').classList.toggle('visible', showRole);
+  document.getElementById('info-role-locked').style.display = showRole ? 'none' : 'block';
+
+  // Reality
+  document.getElementById('info-reality-body').classList.toggle('visible', showReality);
+  document.getElementById('info-reality-locked').style.display = showReality ? 'none' : 'block';
+
+  // Hint text
+  const hint = document.getElementById('info-hint-text');
+  if (done || wc >= 3) {
+    hint.style.display = 'none';
+  } else if (wc === 0) {
+    hint.textContent = 'Get a question wrong to start revealing the historical briefing.';
+    hint.style.display = 'block';
+  } else if (wc === 1) {
+    hint.textContent = 'One more wrong answer will reveal the Industrial Role section.';
+    hint.style.display = 'block';
+  } else if (wc === 2) {
+    hint.textContent = 'One more wrong answer will reveal The Reality section.';
+    hint.style.display = 'block';
+  }
+
+  // Update loc pts display
+  const pts = state.locScores[id] || 0;
+  const qi  = state.locQIdx[id]   || 0;
+  document.getElementById('loc-pts').textContent = `Score: ${pts}/100 — Questions: ${Math.min(qi,5)}/5`;
+}
+
+function renderLocQuestion(id) {
+  const loc = LOCATIONS.find(l => l.id === id);
+  const qi  = state.locQIdx[id] || 0;
+
+  if (state.locCompleted[id] || qi >= loc.questions.length) {
+    // Complete
+    if (!state.locCompleted[id]) state.locCompleted[id] = true;
+    document.getElementById('loc-q-progress').textContent   = 'Location Complete!';
+    document.getElementById('loc-prog-fill').style.width    = '100%';
+    document.getElementById('loc-diff-badge').textContent   = '';
+    document.getElementById('loc-q-text').textContent       = `You scored ${state.locScores[id]}/100 for this location.`;
+    document.getElementById('loc-options').innerHTML        = '';
+    document.getElementById('loc-feedback').className       = 'feedback-box';
+    document.getElementById('loc-next-btn').style.display   = 'none';
+    document.getElementById('loc-finish-btn').style.display = 'inline-block';
+    document.getElementById('loc-retry-banner').style.display = 'none';
+    applyInfoReveal(id);
+    return;
+  }
+
+  const q = loc.questions[qi];
+  document.getElementById('loc-q-progress').textContent  = `Question ${qi+1} of 5`;
+  document.getElementById('loc-prog-fill').style.width   = `${(qi/5)*100}%`;
+  document.getElementById('loc-diff-badge').textContent  = DIFF_NAMES[q.diff];
+  document.getElementById('loc-diff-badge').className    = `diff-badge diff-${q.diff}`;
+  document.getElementById('loc-q-text').textContent      = q.text;
+  document.getElementById('loc-feedback').className      = 'feedback-box';
+  document.getElementById('loc-retry-banner').style.display = state.locRetry[id] ? 'block' : 'none';
+  document.getElementById('loc-next-btn').style.display  = 'none';
+  document.getElementById('loc-finish-btn').style.display = 'none';
+
+  const optList = document.getElementById('loc-options');
+  optList.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  q.opts.forEach((opt, i) => {
+    const li  = document.createElement('li');
+    const btn = document.createElement('button');
+    btn.className   = 'option-btn';
+    btn.textContent = `${letters[i]}. ${opt}`;
+    btn.onclick     = () => handleLocAnswer(id, i);
+    li.appendChild(btn);
+    optList.appendChild(li);
+  });
+}
+
+function handleLocAnswer(id, chosen) {
+  const loc = LOCATIONS.find(l => l.id === id);
+  const qi  = state.locQIdx[id] || 0;
+  const q   = loc.questions[qi];
+  const correct = chosen === q.ans;
+  const fb  = document.getElementById('loc-feedback');
+
+  if (correct) {
+    state.locRetry[id] = false;
+    document.getElementById('loc-retry-banner').style.display = 'none';
+    markOptions('loc-options', chosen, q.ans, true);
+    fb.className   = 'feedback-box correct';
+    fb.textContent = '✓ Correct! ' + q.exp;
+    state.locScores[id]  = (state.locScores[id] || 0) + 20;
+    state.totalScore    += 20;
+    updateScoreDisplays();
+    state.locQIdx[id] = qi + 1;
+    applyInfoReveal(id);
+    const isLast = state.locQIdx[id] >= loc.questions.length;
+    if (isLast) {
+      state.locCompleted[id] = true;
+      document.getElementById('loc-next-btn').style.display   = 'none';
+      document.getElementById('loc-finish-btn').style.display = 'inline-block';
+      applyInfoReveal(id);
+    } else {
+      document.getElementById('loc-next-btn').style.display = 'inline-block';
+    }
+
+  } else if (!state.locRetry[id]) {
+    state.locRetry[id] = true;
+    // Reveal next info section
+    state.locWrongCount[id] = (state.locWrongCount[id] || 0) + 1;
+    markOneWrong('loc-options', chosen);
+    document.getElementById('loc-retry-banner').style.display = 'block';
+    applyInfoReveal(id);
+    // Scroll info box into view
+    document.getElementById('info-reveal-box').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+  } else {
+    state.locRetry[id] = false;
+    document.getElementById('loc-retry-banner').style.display = 'none';
+    markOptions('loc-options', chosen, q.ans, false);
+    fb.className   = 'feedback-box wrong';
+    fb.textContent = `✗ Incorrect. The correct answer was ${['A','B','C','D'][q.ans]}. ${q.exp}`;
+    // Another wrong — reveal next section
+    state.locWrongCount[id] = (state.locWrongCount[id] || 0) + 1;
+    state.locQIdx[id] = qi + 1;
+    applyInfoReveal(id);
+    const isLast = state.locQIdx[id] >= loc.questions.length;
+    if (isLast) {
+      state.locCompleted[id] = true;
+      document.getElementById('loc-next-btn').style.display   = 'none';
+      document.getElementById('loc-finish-btn').style.display = 'inline-block';
+      applyInfoReveal(id);
+    } else {
+      document.getElementById('loc-next-btn').style.display = 'inline-block';
+    }
+  }
+}
+
+function nextLocQuestion() {
+  const id = state.currentLocId;
+  state.locRetry[id] = false;
+  renderLocQuestion(id);
+  document.getElementById('loc-quiz-box').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// ═══════════════════════════════════════════════════════
+// END SCREEN
+// ═══════════════════════════════════════════════════════
+function showEndScreen() {
+  const score = state.totalScore;
+  const max   = (METHODS_QUESTIONS.length + LOCATIONS.length * 5) * 20;
+  const pct   = Math.round((score / max) * 100);
+
+  document.getElementById('end-score-display').textContent = `${score} pts`;
+  document.getElementById('end-score-big').textContent     = `${score} / ${max} points`;
+  document.getElementById('end-grade').textContent         = `${pct}% — ${pct >= 80 ? 'Top of the class!' : pct >= 55 ? 'Good effort' : 'Keep studying!'}`;
+
+  let verdictText, verdictClass;
+  if (score > 800) {
+    verdictText  = 'You are an excellent colonisator';
+    verdictClass = 'verdict-text verdict-exc';
+  } else if (score >= 500) {
+    verdictText  = 'You are a good colonisator';
+    verdictClass = 'verdict-text verdict-good';
+  } else {
+    verdictText  = 'You are a bad colonisator';
+    verdictClass = 'verdict-text verdict-bad';
+  }
+
+  const vEl = document.getElementById('end-verdict');
+  vEl.textContent = verdictText;
+  vEl.className   = verdictClass;
+
+  // Scorecard
+  const sc = document.getElementById('scorecard');
+  sc.innerHTML = '';
+
+  // Methods row
+  const mRow = document.createElement('div');
+  mRow.className = 'sc-row';
+  mRow.innerHTML = `<span>Methods Section</span><span class="sc-pts">${state.methodsScore} / ${METHODS_QUESTIONS.length * 20}</span>`;
+  sc.appendChild(mRow);
+
+  LOCATIONS.forEach(loc => {
+    const pts    = state.locScores[loc.id] || 0;
+    const perfect = pts === 100;
+    const row    = document.createElement('div');
+    row.className = `sc-row ${perfect ? 'total-row' : ''}`;
+    row.innerHTML = `
+      <span>${loc.name}</span>
+      <span class="sc-pts ${perfect ? 'perfect' : ''}">${pts} / 100 ${perfect ? '★' : ''}</span>
+    `;
+    sc.appendChild(row);
+  });
+
+  const totRow = document.createElement('div');
+  totRow.className = 'sc-row total-row';
+  totRow.innerHTML = `<span>Total</span><span class="sc-pts">${score} / ${max}</span>`;
+  sc.appendChild(totRow);
+
+  showScreen('end-screen');
+}
+
+function restartGame() {
+  state = {
+    totalScore:0, methodsScore:0, methodsQIdx:0, methodsRetry:false,
+    locScores:{}, locCompleted:{}, locWrongCount:{}, locQIdx:{}, locRetry:{},
+    currentLocId:null
+  };
+  showScreen('title-screen');
+}
+
+// ═══════════════════════════════════════════════════════
+// SCREEN MANAGEMENT & INIT
+// ═══════════════════════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+  if (id === 'methods-screen' && state.methodsQIdx === 0) {
+    initMethodsQuiz();
+  }
+}
+
+// Redraw map on window resize
+window.addEventListener('resize', () => {
+  if (document.getElementById('map-screen').classList.contains('active')) {
+    drawMap();
+  }
+});
+
+</script>
+</body>
+</html>
